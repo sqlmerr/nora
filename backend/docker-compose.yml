@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16.2-alpine
+    command: -p 54321
+    expose:
+        - 54321
+    ports:
+        - '54321:54321'
+    volumes:
+        - app-db-data:/var/lib/postgresql/data
+    env_file:
+        - .env
+    environment:
+        - PGDATA=/var/lib/postgresql/data/pgdata
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_USER=postgres
+    networks:
+        - nora
+  
+volumes:
+  app-db-data:
+
+networks:
+  nora:
+    driver: bridge
