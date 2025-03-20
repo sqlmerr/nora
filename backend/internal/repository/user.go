@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"nora/internal/model"
 
 	sq "github.com/Masterminds/squirrel"
@@ -56,6 +57,9 @@ func (r *UserRepository) FindOne(ctx context.Context, id uuid.UUID) (*model.User
 	}
 	user, err := pgx.CollectOneRow(result, pgx.RowToStructByName[model.User])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &user, nil
@@ -73,6 +77,9 @@ func (r *UserRepository) FindOneByUsername(ctx context.Context, username string)
 	}
 	user, err := pgx.CollectOneRow(result, pgx.RowToStructByName[model.User])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &user, nil

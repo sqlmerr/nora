@@ -25,4 +25,5 @@ var (
 	ErrInvalidBody        = New("invalid body", http.StatusUnprocessableEntity)
 	ErrUnauthorized       = New("unauthorized", http.StatusUnauthorized)
 	ErrInvalidToken       = New("invalid token", http.StatusForbidden)
+	ErrForbidden          = New("forbidden", http.StatusForbidden)
 )

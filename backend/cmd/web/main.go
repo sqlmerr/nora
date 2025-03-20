@@ -36,8 +36,11 @@ func main() {
 	}
 
 	userRepo := repository.NewUserRepository(dbPool)
+	taskRepo := repository.NewTaskRepository(dbPool)
+	taskGroupRepo := repository.NewTaskGroupRepository(dbPool)
+	spaceRepo := repository.NewSpaceRepository(dbPool)
 
-	s := service.New(userRepo, cfg)
+	s := service.New(userRepo, taskRepo, taskGroupRepo, spaceRepo, cfg)
 	h := handler.New(logger, s, cfg)
 
 	var serverAddr = fmt.Sprintf("%s:%d", cfg.ServerHost, cfg.ServerPort)

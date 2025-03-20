@@ -33,5 +33,24 @@ func New(logger *zap.Logger, s *service.Service, config *config.Config) *fiber.A
 	auth.Post("/login", login)
 	auth.Get("/me", jwtMiddleware, mw.UserGetter, getMe)
 
+	spaces := api.Group("/spaces", jwtMiddleware, mw.UserGetter)
+	spaces.Get("/", listSpaces)
+	spaces.Get("/:id", getSpace)
+	spaces.Post("/", createSpace)
+	spaces.Delete("/:id", deleteSpace)
+
+	spaces.Get("/:spaceId/groups", listTaskGroups)
+
+	tasks := api.Group("/tasks", jwtMiddleware, mw.UserGetter)
+	tasks.Get("/:groupId", listTasks)
+	tasks.Post("/", createTask)
+	tasks.Get("/:id", getTask)
+	tasks.Put("/:id", updateTask)
+	tasks.Delete("/:id", deleteTask)
+
+	groups := api.Group("/groups", jwtMiddleware, mw.UserGetter)
+	groups.Get("/:spaceId", listTaskGroups)
+	groups.Post("/", createTaskGroup)
+
 	return app
 }
