@@ -9,6 +9,8 @@ import (
 	"nora/internal/service"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
 	"go.uber.org/zap"
 )
 
@@ -25,6 +27,14 @@ func main() {
 	}
 
 	dbPool, err := pgxpool.New(context.Background(), cfg.ConnectionString())
+	defer dbPool.Close()
+
+	db := stdlib.OpenDB(*dbPool.Config().ConnConfig)
+	defer db.Close()
+	if err := goose.Up(db, "migrations"); err != nil {
+		panic(err)
+	}
+
 	userRepo := repository.NewUserRepository(dbPool)
 
 	s := service.New(userRepo, cfg)
