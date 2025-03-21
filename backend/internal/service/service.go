@@ -10,9 +10,10 @@ type Service struct {
 	t   repository.TaskRepo
 	tg  repository.TaskGroupRepo
 	sp  repository.SpaceRepo
+	usp repository.UserSpaceRepo
 	cfg *config.Config
 }
 
-func New(u repository.UserRepo, t repository.TaskRepo, tg repository.TaskGroupRepo, sp repository.SpaceRepo, config *config.Config) *Service {
-	return &Service{u: u, t: t, tg: tg, sp: sp, cfg: config}
+func New(u repository.UserRepo, t repository.TaskRepo, tg repository.TaskGroupRepo, sp repository.SpaceRepo, usp repository.UserSpaceRepo, config *config.Config) *Service {
+	return &Service{u: u, t: t, tg: tg, sp: sp, usp: usp, cfg: config}
 }

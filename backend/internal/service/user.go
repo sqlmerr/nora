@@ -64,3 +64,18 @@ func (s *Service) FindOneUser(ctx context.Context, id uuid.UUID) (*model.User, e
 func (s *Service) FindOneUserByUsername(ctx context.Context, username string) (*model.User, error) {
 	return s.u.FindOneByUsername(ctx, username)
 }
+
+func (s *Service) LinkUserToSpace(ctx context.Context, currentUserID uuid.UUID, data *model.UserSpaceCreate) (*uuid.UUID, error) {
+	space, err := s.GetSpace(ctx, data.SpaceID, currentUserID)
+	if err != nil {
+		return nil, err
+	}
+	if space == nil {
+		return nil, e.ErrNotFound
+	}
+	if space.UserID != currentUserID {
+		return nil, e.ErrForbidden
+	}
+
+	return s.usp.Create(ctx, data)
+}

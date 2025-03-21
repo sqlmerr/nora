@@ -12,4 +12,5 @@ CREATE TABLE IF NOT EXISTS users (
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE IF EXISTS users;
+DROP EXTENSION IF EXISTS CITEXT;
 -- +goose StatementEnd

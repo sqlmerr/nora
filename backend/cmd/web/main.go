@@ -39,8 +39,9 @@ func main() {
 	taskRepo := repository.NewTaskRepository(dbPool)
 	taskGroupRepo := repository.NewTaskGroupRepository(dbPool)
 	spaceRepo := repository.NewSpaceRepository(dbPool)
+	userSpaceRepo := repository.NewUserSpaceRepository(dbPool)
 
-	s := service.New(userRepo, taskRepo, taskGroupRepo, spaceRepo, cfg)
+	s := service.New(userRepo, taskRepo, taskGroupRepo, spaceRepo, userSpaceRepo, cfg)
 	h := handler.New(logger, s, cfg)
 
 	var serverAddr = fmt.Sprintf("%s:%d", cfg.ServerHost, cfg.ServerPort)

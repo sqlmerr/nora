@@ -89,3 +89,24 @@ func deleteSpace(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{"message": "space deleted", "ok": true})
 }
+
+func linkUserToSpace(c *fiber.Ctx) error {
+	s := c.Locals("service").(*service.Service)
+	user := c.Locals("user").(*model.User)
+	var data model.UserSpaceCreate
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
+	}
+
+	_, err := s.LinkUserToSpace(c.UserContext(), user.ID, &data)
+	if err != nil {
+		var apiErr e.APIError
+		ok := errors.As(err, &apiErr)
+		if ok {
+			return c.Status(apiErr.Status).JSON(err)
+		}
+		return c.Status(http.StatusInternalServerError).JSON(e.New(err.Error(), 500))
+	}
+
+	return c.JSON(fiber.Map{"message": "user linked to space", "ok": true})
+}

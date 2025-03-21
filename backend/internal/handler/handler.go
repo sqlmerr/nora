@@ -41,6 +41,7 @@ func New(logger *zap.Logger, s *service.Service, config *config.Config) *fiber.A
 	spaces.Get("/", listSpaces)
 	spaces.Get("/:id", getSpace)
 	spaces.Post("/", createSpace)
+	spaces.Post("/link", linkUserToSpace)
 	spaces.Delete("/:id", deleteSpace)
 
 	spaces.Get("/:spaceId/groups", listTaskGroups)
