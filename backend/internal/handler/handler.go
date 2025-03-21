@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"nora/internal/config"
 	mw "nora/internal/middleware"
 	"nora/internal/service"
@@ -23,6 +24,9 @@ func New(logger *zap.Logger, s *service.Service, config *config.Config) *fiber.A
 		c.Locals("logger", logger)
 		c.Locals("service", s)
 		c.Locals("config", config)
+
+		ctx := context.WithValue(c.Context(), "logger", logger)
+		c.SetUserContext(ctx)
 		return c.Next()
 	})
 	api := app.Group("/api")
@@ -44,7 +48,7 @@ func New(logger *zap.Logger, s *service.Service, config *config.Config) *fiber.A
 	tasks := api.Group("/tasks", jwtMiddleware, mw.UserGetter)
 	tasks.Get("/:groupId", listTasks)
 	tasks.Post("/", createTask)
-	tasks.Get("/:id", getTask)
+	tasks.Get("/one/:id", getTask)
 	tasks.Put("/:id", updateTask)
 	tasks.Delete("/:id", deleteTask)
 

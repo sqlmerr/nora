@@ -21,7 +21,7 @@ func listTasks(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	tasks, err := s.FindAllTasksByGroup(c.Context(), groupId, user.ID)
+	tasks, err := s.FindAllTasksByGroup(c.UserContext(), groupId, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -42,7 +42,7 @@ func getTask(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	task, err := s.FindOneTask(c.Context(), taskID, user.ID)
+	task, err := s.FindOneTask(c.UserContext(), taskID, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -63,7 +63,7 @@ func createTask(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	task, err := s.CreateTask(c.Context(), &data, user.ID)
+	task, err := s.CreateTask(c.UserContext(), &data, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -85,7 +85,7 @@ func deleteTask(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	err = s.DeleteTask(c.Context(), taskID, user.ID)
+	err = s.DeleteTask(c.UserContext(), taskID, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -112,7 +112,7 @@ func updateTask(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	err = s.UpdateTask(c.Context(), taskID, &data, user.ID)
+	err = s.UpdateTask(c.UserContext(), taskID, &data, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)

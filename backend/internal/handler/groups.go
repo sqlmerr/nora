@@ -21,7 +21,7 @@ func listTaskGroups(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	groups, err := s.FindAllTaskGroupsBySpace(c.Context(), spaceId, user.ID)
+	groups, err := s.FindAllTaskGroupsBySpace(c.UserContext(), spaceId, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -41,7 +41,7 @@ func createTaskGroup(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	group, err := s.CreateTaskGroup(c.Context(), &data, user.ID)
+	group, err := s.CreateTaskGroup(c.UserContext(), &data, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)

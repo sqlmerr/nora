@@ -21,7 +21,7 @@ func createSpace(c *fiber.Ctx) error {
 
 	data.UserID = user.ID
 
-	space, err := s.CreateSpace(c.Context(), &data)
+	space, err := s.CreateSpace(c.UserContext(), &data)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -38,7 +38,7 @@ func listSpaces(c *fiber.Ctx) error {
 	s := c.Locals("service").(*service.Service)
 	user := c.Locals("user").(*model.User)
 
-	spaces, err := s.ListSpaces(c.Context(), user.ID)
+	spaces, err := s.ListSpaces(c.UserContext(), user.ID)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(e.New(err.Error(), 500))
 	}
@@ -55,7 +55,7 @@ func getSpace(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	space, err := s.GetSpace(c.Context(), spaceID, user.ID)
+	space, err := s.GetSpace(c.UserContext(), spaceID, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -77,7 +77,7 @@ func deleteSpace(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	err = s.DeleteSpace(c.Context(), spaceID, user.ID)
+	err = s.DeleteSpace(c.UserContext(), spaceID, user.ID)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)

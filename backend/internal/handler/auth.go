@@ -17,7 +17,7 @@ func registerUser(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	user, err := s.Register(c.Context(), &data)
+	user, err := s.Register(c.UserContext(), &data)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
@@ -37,7 +37,7 @@ func login(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnprocessableEntity).JSON(e.ErrInvalidBody)
 	}
 
-	token, err := s.Login(c.Context(), &data)
+	token, err := s.Login(c.UserContext(), &data)
 	if err != nil {
 		var apiErr e.APIError
 		ok := errors.As(err, &apiErr)
