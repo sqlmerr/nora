@@ -16,6 +16,7 @@ type UserRepo interface {
 	FindOne(ctx context.Context, id uuid.UUID) (*model.User, error)
 	FindOneByUsername(ctx context.Context, username string) (*model.User, error)
 	Delete(ctx context.Context, id uuid.UUID) error
+	Update(ctx context.Context, id uuid.UUID, data *model.UserUpdate) error
 }
 
 type UserRepository struct {
@@ -87,6 +88,29 @@ func (r *UserRepository) FindOneByUsername(ctx context.Context, username string)
 
 func (r *UserRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	query, args, err := sq.Delete("users").Where("id = $1", id).ToSql()
+	if err != nil {
+		return err
+	}
+	_, err = r.dbPool.Exec(ctx, query, args...)
+	return err
+}
+
+func (r *UserRepository) Update(ctx context.Context, id uuid.UUID, data *model.UserUpdate) error {
+	b := sq.StatementBuilder.PlaceholderFormat(sq.Dollar).Update("users")
+	if data.Name != "" {
+		b = b.Set("name", data.Name)
+	}
+	if data.Username != "" {
+		b = b.Set("username", data.Username)
+	}
+	if data.Password != "" {
+		b = b.Set("password", data.Password)
+	}
+	if data.TelegramID != 0 {
+		b = b.Set("telegram_id", data.TelegramID)
+	}
+
+	query, args, err := b.Where(sq.Eq{"id": id}).ToSql()
 	if err != nil {
 		return err
 	}

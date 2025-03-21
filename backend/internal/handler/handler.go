@@ -7,6 +7,7 @@ import (
 	"nora/internal/service"
 
 	"github.com/gofiber/fiber/v2"
+	lg "github.com/gofiber/fiber/v2/middleware/logger"
 	"go.uber.org/zap"
 )
 
@@ -29,6 +30,7 @@ func New(logger *zap.Logger, s *service.Service, config *config.Config) *fiber.A
 		c.SetUserContext(ctx)
 		return c.Next()
 	})
+	app.Use(lg.New())
 	api := app.Group("/api")
 	api.Get("/", root)
 
@@ -36,6 +38,7 @@ func New(logger *zap.Logger, s *service.Service, config *config.Config) *fiber.A
 	auth.Post("/register", registerUser)
 	auth.Post("/login", login)
 	auth.Get("/me", jwtMiddleware, mw.UserGetter, getMe)
+	auth.Post("/telegram/connect", connectTelegram)
 
 	spaces := api.Group("/spaces", jwtMiddleware, mw.UserGetter)
 	spaces.Get("/", listSpaces)

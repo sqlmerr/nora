@@ -27,7 +27,8 @@ func (d *Database) ConnectionString() string {
 type Config struct {
 	Server
 	Database
-	JwtSecret string `env:"JWT_SECRET"`
+	JwtSecret   string `env:"JWT_SECRET"`
+	SecretToken string `env:"SECRET_TOKEN"`
 }
 
 func GetConfig() (*Config, error) {

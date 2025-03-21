@@ -3,15 +3,19 @@ import os
 import logging
 
 from aiogram import Bot, Dispatcher
+from httpx import AsyncClient
 from norabot.config import settings
+from norabot.handlers import init_router
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-async def main():    
+async def main():
     bot = Bot(settings.bot_token)
-    dp = Dispatcher()
+    client = AsyncClient(base_url=settings.api_url)
+    dp = Dispatcher(client=client)
     dp.startup.register(on_startup)
+    dp.include_router(init_router())
     
     log.info("Starting bot")
     await dp.start_polling(bot)

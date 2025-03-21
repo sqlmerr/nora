@@ -79,3 +79,7 @@ func (s *Service) LinkUserToSpace(ctx context.Context, currentUserID uuid.UUID, 
 
 	return s.usp.Create(ctx, data)
 }
+
+func (s *Service) ConnectTelegram(ctx context.Context, userID uuid.UUID, telegramID int64) error {
+	return s.u.Update(ctx, userID, &model.UserUpdate{TelegramID: telegramID})
+}
